@@ -145,7 +145,7 @@ class LocalChatCompletion(LocalCompletionsAPI):
             "model": self.model,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "stop": stop[:4],
+            # "stop": stop[:4],
             "seed": seed,
             **gen_kwargs,
         }

@@ -76,7 +76,7 @@ class TextSynthLM(LM):
 
     @property
     def max_gen_toks(self) -> int:
-        return 256
+        return 4096
 
     @property
     def batch_size(self):
