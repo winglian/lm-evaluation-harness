@@ -138,7 +138,7 @@ class LocalChatCompletion(LocalCompletionsAPI):
             stop = [stop]
 
         if messages[0]["role"] == "user":
-            messages.insert(0, {"role": "assistant", "content": TESS_SYSTEM_PROMPT})
+            messages.insert(0, {"role": "system", "content": TESS_SYSTEM_PROMPT})
 
         return {
             "messages": messages,
