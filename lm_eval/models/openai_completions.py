@@ -93,6 +93,7 @@ class LocalCompletionsAPI(TemplateAPI):
     def api_key(self):
         return os.environ.get("OPENAI_API_KEY", "")
 
+TESS_SYSTEM_PROMPT = """You are Tess-R1, an advanced AI that was created for complex reasoning. Given a user query, you are able to first create a Chain-of-Thought (CoT) reasoning. Once the CoT is devised, you then proceed to first think about how to answer. While doing this, you have the capability to contemplate on the thought, and also provide alternatives. Once the CoT steps have been thought through, you then respond by creating the final output."""
 
 @register_model("local-chat-completions")
 class LocalChatCompletion(LocalCompletionsAPI):
@@ -135,6 +136,10 @@ class LocalChatCompletion(LocalCompletionsAPI):
         stop = gen_kwargs.pop("until", ["<|endoftext|>"])
         if not isinstance(stop, (list, tuple)):
             stop = [stop]
+
+        if messages[0]["role"] == "user":
+            messages.insert(0, {"role": "assistant", "content": TESS_SYSTEM_PROMPT})
+
         return {
             "messages": messages,
             "model": self.model,
@@ -152,7 +157,11 @@ class LocalChatCompletion(LocalCompletionsAPI):
             outputs = [outputs]
         for out in outputs:
             for choices in out["choices"]:
-                res.append(choices["message"]["content"])
+                content = choices["message"]["content"]
+                try:
+                    res.append(content.split("<output>")[1].split("</output>")[0])
+                except:
+                    res.append(content)
         return res
 
     def tok_encode(
@@ -176,7 +185,7 @@ class LocalChatCompletion(LocalCompletionsAPI):
 class OpenAICompletionsAPI(LocalCompletionsAPI):
     def __init__(
         self,
-        base_url="https://api.openai.com/v1/completions",
+        base_url=os.environ("OPENAI_BASE_URL", "https://api.openai.com/v1") + "/completions",
         tokenizer_backend="tiktoken",
         **kwargs,
     ):
@@ -212,7 +221,7 @@ class OpenAICompletionsAPI(LocalCompletionsAPI):
 class OpenAIChatCompletion(LocalChatCompletion):
     def __init__(
         self,
-        base_url="https://api.openai.com/v1/chat/completions",
+        base_url=os.environ("OPENAI_BASE_URL", "https://api.openai.com/v1") + "/chat/completions",
         tokenizer_backend=None,
         tokenized_requests=False,
         **kwargs,
