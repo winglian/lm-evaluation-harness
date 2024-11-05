@@ -185,7 +185,7 @@ class LocalChatCompletion(LocalCompletionsAPI):
 class OpenAICompletionsAPI(LocalCompletionsAPI):
     def __init__(
         self,
-        base_url=os.environ("OPENAI_BASE_URL", "https://api.openai.com/v1") + "/completions",
+        base_url="https://api.openai.com/v1/completions",
         tokenizer_backend="tiktoken",
         **kwargs,
     ):
@@ -221,7 +221,7 @@ class OpenAICompletionsAPI(LocalCompletionsAPI):
 class OpenAIChatCompletion(LocalChatCompletion):
     def __init__(
         self,
-        base_url=os.environ("OPENAI_BASE_URL", "https://api.openai.com/v1") + "/chat/completions",
+        base_url="https://api.openai.com/v1/chat/completions",
         tokenizer_backend=None,
         tokenized_requests=False,
         **kwargs,
