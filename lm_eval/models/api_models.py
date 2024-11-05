@@ -68,7 +68,7 @@ class TemplateAPI(TemplateLM):
         # number of concurrent requests. More useful if not batching
         num_concurrent: int = 1,
         max_retries: int = 3,
-        max_gen_toks: int = 256,
+        max_gen_toks: int = 2048,
         batch_size: Union[str, int] = 1,
         seed: int = 1234,
         max_length: Optional[int] = 2048,
